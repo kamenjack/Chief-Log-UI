@@ -23,7 +23,7 @@ label {
 </style>
 """, unsafe_allow_html=True)
 
-st.title("Train Delay Viewer")
+st.title("MNR Delay Report with LLM")
 
 uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
 
@@ -34,6 +34,7 @@ if uploaded_file is not None:
     train_column = "TRAIN_NAME"
     location_column = "LOCATION_NAME"
     performance_column = "LATENESS"
+    display_logid_column = "DISPLAY_LOG_ID"
 
     if date_column not in df.columns:
         st.error(f"Column '{date_column}' not found.")
@@ -60,7 +61,7 @@ if uploaded_file is not None:
         st.stop()
 
     display_columns = [
-        col for col in [train_column, location_column, performance_column]
+        col for col in [train_column, location_column, performance_column, display_logid_column]
         if col in daily_df.columns
     ]
 
