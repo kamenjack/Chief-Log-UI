@@ -1,0 +1,193 @@
+import streamlit as st
+import pandas as pd
+
+st.set_page_config(page_title="Train Delay Viewer", layout="wide")
+
+st.markdown("""
+<style>
+input[disabled], textarea[disabled] {
+    color: black !important;
+    -webkit-text-fill-color: black !important;
+    background-color: white !important;
+    opacity: 1 !important;
+}
+
+div[data-baseweb="input"] {
+    background-color: white !important;
+}
+
+label {
+    color: black !important;
+    font-weight: 600;
+}
+
+/* Delay code row */
+.delay-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0 20px 0;
+    flex-wrap: nowrap;
+}
+
+.delay-label {
+    font-size: 18px;
+    font-weight: 600;
+    margin-right: 10px;
+    white-space: nowrap;
+}
+
+.delay-box {
+    width: 48px;
+    height: 38px;
+    border: 1px solid #bdbdbd;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    font-size: 20px;
+    color: black;
+    box-sizing: border-box;
+}
+
+.delay-box-wide {
+    width: 60px;
+    height: 38px;
+    border: 1px solid #bdbdbd;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    font-size: 20px;
+    color: black;
+    box-sizing: border-box;
+}
+</style>
+""", unsafe_allow_html=True)
+
+st.title("MNR Delay Report with LLM")
+
+uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
+
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file)
+
+    date_column = "RUN_DATE"
+    train_column = "TRAIN_NAME"
+    location_column = "LOCATION_NAME"
+    performance_column = "LATENESS"
+    display_logid_column = "DISPLAY_LOG_ID"
+
+    code_columns = [
+        "DEPT_CODE",
+        "SYSTEM_CODE",
+        "SYMPTOM_CODE"
+    ]
+
+    if date_column not in df.columns:
+        st.error(f"Column '{date_column}' not found.")
+        st.stop()
+
+    df[date_column] = pd.to_datetime(df[date_column], errors="coerce")
+    df = df.dropna(subset=[date_column])
+
+    if df.empty:
+        st.warning("No valid dates found in the uploaded CSV.")
+        st.stop()
+
+    selected_date = st.date_input(
+        "Run Date",
+        value=df[date_column].dt.date.min(),
+        min_value=df[date_column].dt.date.min(),
+        max_value=df[date_column].dt.date.max()
+    )
+
+    daily_df = df[df[date_column].dt.date == selected_date].copy()
+
+    if daily_df.empty:
+        st.info("No records found for the selected date.")
+        st.stop()
+
+    display_columns = [
+        col for col in [train_column, location_column, performance_column]
+        if col in daily_df.columns
+    ]
+
+    st.markdown("### Daily Records")
+
+    event = st.dataframe(
+        daily_df[display_columns],
+        use_container_width=True,
+        hide_index=True,
+        on_select="rerun",
+        selection_mode="single-row",
+        key="daily_records_table",
+    )
+
+    selected_row = None
+    selected_rows = event.selection.rows
+
+    if selected_rows:
+        row_position = selected_rows[0]
+        selected_row = daily_df.iloc[row_position]
+
+    st.markdown("### Train Details")
+
+    if selected_row is None:
+        st.info("Click a train row in Daily Records.")
+    else:
+        # Render delay code row
+        dept_code = str(selected_row.get("DEPT_CODE", "")).strip()
+        system_code = str(selected_row.get("SYSTEM_CODE", "")).strip()
+        symptom_code = str(selected_row.get("SYMPTOM_CODE", "")).strip()
+
+        def safe_display(value):
+            if value == "nan":
+                return ""
+            return value
+
+        st.markdown(
+            f"""
+            <div class="delay-row">
+                <div class="delay-label">Delay Code:</div>
+                <div class="delay-box">{safe_display(dept_code)}</div>
+                <div class="delay-box">{safe_display(system_code)}</div>
+                <div class="delay-box-wide">{safe_display(symptom_code)}</div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+        # Skip these fields in the normal detail list
+        skip_fields = set(code_columns)
+
+        for index, field in enumerate(selected_row.index):
+            if field in skip_fields:
+                continue
+
+            value = selected_row[field]
+
+            if pd.isna(value) or str(value).strip() == "":
+                continue
+
+            st.markdown(f"**{field}**")
+
+            if isinstance(value, str) and len(value) > 80:
+                st.text_area(
+                    label="",
+                    value=value,
+                    height=120,
+                    disabled=True,
+                    label_visibility="collapsed",
+                    key=f"area_{row_position}_{field}_{index}"
+                )
+            else:
+                st.text_input(
+                    label="",
+                    value=str(value),
+                    disabled=True,
+                    label_visibility="collapsed",
+                    key=f"text_{row_position}_{field}_{index}"
+                )
