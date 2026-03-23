@@ -1,5 +1,8 @@
 import streamlit as st
 import pandas as pd
+import textwrap
+
+from dict import getDeptName, getSystemName, getSymptomName
 
 st.set_page_config(page_title="Train Delay Viewer", layout="wide")
 
@@ -64,13 +67,29 @@ label {
     color: black;
     box-sizing: border-box;
 }
+
+.delay-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.delay-note {
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #2f3340;
+    white-space: nowrap;
+}
 </style>
 """, unsafe_allow_html=True)
 
 st.title("MNR Delay Report with LLM")
 
 uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
-
+chief_log_file="ChiefLog 2023-01-01 to 2023-12-31.csv"
+chiefLogDataFrame = pd.read_csv(chief_log_file)
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
 
@@ -106,6 +125,23 @@ if uploaded_file is not None:
 
     daily_df = df[df[date_column].dt.date == selected_date].copy()
 
+    chiefLogDateColumn = "Log Date"
+    chiefLogDataFrame[chiefLogDateColumn] = pd.to_datetime(chiefLogDataFrame[chiefLogDateColumn], errors="coerce")
+
+    chiefLogDailyDf = chiefLogDataFrame[chiefLogDataFrame[chiefLogDateColumn].dt.date == selected_date].copy()
+    merged_comment_df = (
+        chiefLogDailyDf.groupby("DisplayLogId", sort=False)["Comments"]
+        .apply(
+            lambda commentSeries: "\n".join(
+                str(singleComment).strip()
+                for singleComment in commentSeries
+                if pd.notna(singleComment) and str(singleComment).strip() != ""
+            )
+        )
+        .reset_index()
+    )
+
+
     if daily_df.empty:
         st.info("No records found for the selected date.")
         st.stop()
@@ -114,6 +150,7 @@ if uploaded_file is not None:
         col for col in [train_column, location_column, performance_column]
         if col in daily_df.columns
     ]
+    log_id_columns=[col for col in["DisplayLogId","Comments"] if col in chiefLogDailyDf.columns]
 
     st.markdown("### Daily Records")
 
@@ -126,42 +163,75 @@ if uploaded_file is not None:
         key="daily_records_table",
     )
 
+    st.dataframe(
+        merged_comment_df,
+        use_container_width=True,
+        hide_index=True
+    )
+
     selected_row = None
     selected_rows = event.selection.rows
 
     if selected_rows:
         row_position = selected_rows[0]
         selected_row = daily_df.iloc[row_position]
+        selected_train=str(selected_row.get("TRAIN_NAME","")).strip()
 
     st.markdown("### Train Details")
 
     if selected_row is None:
         st.info("Click a train row in Daily Records.")
     else:
-        # Render delay code row
         dept_code = str(selected_row.get("DEPT_CODE", "")).strip()
         system_code = str(selected_row.get("SYSTEM_CODE", "")).strip()
         symptom_code = str(selected_row.get("SYMPTOM_CODE", "")).strip()
+        dept_name=getDeptName(dept_code)
+        system_name=getSystemName(dept_code,system_code)
+        symptom_name=getSymptomName(dept_code,system_code,symptom_code)
 
         def safe_display(value):
             if value == "nan":
                 return ""
             return value
 
-        st.markdown(
-            f"""
+
+        html = textwrap.dedent(f"""
             <div class="delay-row">
                 <div class="delay-label">Delay Code:</div>
-                <div class="delay-box">{safe_display(dept_code)}</div>
-                <div class="delay-box">{safe_display(system_code)}</div>
-                <div class="delay-box-wide">{safe_display(symptom_code)}</div>
+                <div class="delay-item">
+                    <div class="delay-box">{safe_display(dept_code)}</div>
+                    <div class="delay-note">{dept_name}</div>
+                </div>
+                <div class="delay-item">
+                    <div class="delay-box">{safe_display(system_code)}</div>
+                    <div class="delay-note">{system_name}</div>
+                </div>
+                <div class="delay-item">
+                    <div class="delay-box delay-box-wide">{safe_display(symptom_code)}</div>
+                    <div class="delay-note">{symptom_name}</div>
+                </div>
             </div>
-            """,
-            unsafe_allow_html=True
-        )
+        """).strip()
+        st.markdown(html, unsafe_allow_html=True)
 
         # Skip these fields in the normal detail list
         skip_fields = set(code_columns)
+        skip_fields.update(["DEPT_NAME", "SYSTEM_NAME", "SYMPTOM_NAME","DelayCode"])
+        LogidCommentMap = (
+            chiefLogDailyDf.groupby("DisplayLogId")["Comments"]
+            .apply(
+                lambda commentSeries: "\n".join(
+                    dict.fromkeys(
+                        str(singleComment).strip()
+                        for singleComment in commentSeries
+                        if pd.notna(singleComment) and str(singleComment).strip() != ""
+                    )
+                )
+            )
+            .to_dict()
+        )
+        selected_id = str(selected_row["DISPLAY_LOG_ID"]).strip()
+        matched_file2_comment = LogidCommentMap.get(selected_id, "")
 
         for index, field in enumerate(selected_row.index):
             if field in skip_fields:
@@ -191,3 +261,15 @@ if uploaded_file is not None:
                     label_visibility="collapsed",
                     key=f"text_{row_position}_{field}_{index}"
                 )
+
+            if field == "COMMENTS":
+                st.markdown("**ChiefLog Comment**")
+                st.text_area(
+                    label="",
+                    value=matched_file2_comment,
+                    height=120,
+                    disabled=True,
+                    label_visibility="collapsed",
+                    key=f"area_comment2_{row_position}_{index}"
+                )
+

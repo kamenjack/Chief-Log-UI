@@ -1,0 +1,182 @@
+Dept/Roll-up ID,Dept/Roll-up Code,Dept/Roll-up Name,System ID,System Code,System Name,Symptom ID,Symptom/Component Code,Symptom/Component Name
+1756,1,Mechanical,1772,0,Unclassified,1849,0,To Be Determined
+1756,1,Mechanical,1781,1,Carbody,1850,0,To Be Determined
+1756,1,Mechanical,1796,2,Controls & Diagnostics,1851,0,To Be Determined
+1756,1,Mechanical,1807,3,Trucks & Suspension,1852,0,To Be Determined
+1756,1,Mechanical,1814,4,Main & Aux Electric Power,1853,0,To Be Determined
+1756,1,Mechanical,1821,5,Propulsion & Dynamic Brake,1854,0,To Be Determined
+1756,1,Mechanical,1824,6,Power Collection,1855,0,To Be Determined
+1756,1,Mechanical,1834,7,Brake & Air Supply,1856,0,To Be Determined
+1756,1,Mechanical,1837,8,Cab Signal ATC,1857,0,To Be Determined
+1756,1,Mechanical,1837,8,Cab Signal ATC,2281,1,ATC
+1756,1,Mechanical,1837,8,Cab Signal ATC,2282,2,PTC
+1756,1,Mechanical,1837,8,Cab Signal ATC,2260,3,Cab Signal & ATC - No Defect Found
+1756,1,Mechanical,1840,9,Communication,1858,0,To Be Determined
+1756,1,Mechanical,1840,9,Communication,,1,PTC
+1756,1,Mechanical,1842,A,Doors,1859,0,To Be Determined
+1756,1,Mechanical,1843,B,HVAC,1860,0,To Be Determined
+1756,1,Mechanical,1767,C,Lighting,1952,0,To Be Determined
+1756,1,Mechanical,1844,D,Lavatories & Toilets,,0,To Be Determined
+1756,1,Mechanical,1845,E,Main Diesel Engine,1862,0,To Be Determined
+1756,1,Mechanical,1846,F,Fuel Supply,1863,0,To Be Determined
+1756,1,Mechanical,1847,G,Head End Power,1864,0,To Be Determined
+1756,1,Mechanical,1848,H,Consist,1865,0,To Be Determined
+1756,1,Mechanical,2152,I,Car Cleaning,2216,0,To Be Determined
+1756,1,Mechanical,2206,J,Employee Injury,2210,0,To Be Determined
+1756,1,Mechanical,2211,K,Checked Equipment No Defect Found,2212,0,To Be Determined
+1756,1,Mechanical,2302,L,Derailment,2305,0,To Be Determined
+1756,1,Mechanical,2303,M,Unscheduled Turn Of Equipment,2304,0,To Be Determined
+1757,2,Engineering,1773,0,Unclassified,1866,0,To Be Determined
+1757,2,Engineering,1788,1,Track & Structures,1867,0,To Be Determined
+1757,2,Engineering,1788,1,Track & Structures,1931,10,ROW Conditions
+1757,2,Engineering,1788,1,Track & Structures,,11,ROW - NDF
+1757,2,Engineering,1788,1,Track & Structures,1935,20,Operating Restrictions
+1757,2,Engineering,1788,1,Track & Structures,1938,30,Program & Production Trackwork
+1757,2,Engineering,1788,1,Track & Structures,2371,31,Track Equipment Failure
+1757,2,Engineering,1788,1,Track & Structures,2356,32,Sperry; Cyclical track inspection and testing
+1757,2,Engineering,1788,1,Track & Structures,2274,41,Insulated Joint
+1757,2,Engineering,1788,1,Track & Structures,1942,50,Switch
+1757,2,Engineering,1788,1,Track & Structures,1946,60,Movable Bridge
+1757,2,Engineering,1788,1,Track & Structures,,61,Movable Bridge - No Cause Found
+1757,2,Engineering,1788,1,Track & Structures,,70,Fixed Bridge
+1757,2,Engineering,1788,1,Track & Structures,1951,80,Structures
+1757,2,Engineering,1788,1,Track & Structures,2140,90,Rails
+1757,2,Engineering,1788,1,Track & Structures,,J0,Employee Injury
+1757,2,Engineering,1798,2,Communications & Signals,1868,0,To Be Determined
+1757,2,Engineering,1798,2,Communications & Signals,1930,10,Switch Failure
+1757,2,Engineering,1798,2,Communications & Signals,1933,20,Interlocking
+1757,2,Engineering,1798,2,Communications & Signals,2359,21,Interlocking - Track Circuit
+1757,2,Engineering,1798,2,Communications & Signals,1937,30,Intermediate Territory
+1757,2,Engineering,1798,2,Communications & Signals,2360,31,Intermediate Territory - Track Circuit
+1757,2,Engineering,1798,2,Communications & Signals,1940,40,CTC System
+1757,2,Engineering,1798,2,Communications & Signals,1943,50,Grade Crossings
+1757,2,Engineering,1798,2,Communications & Signals,2269,51,No Cause Found
+1757,2,Engineering,1798,2,Communications & Signals,1947,60,Communication Systems
+1757,2,Engineering,1798,2,Communications & Signals,,70,Telco/Utilities
+1757,2,Engineering,1798,2,Communications & Signals,2215,80,Signals
+1757,2,Engineering,1798,2,Communications & Signals,2275,90,PTC System
+1757,2,Engineering,1798,2,Communications & Signals,2276,91,CS/ATC
+1757,2,Engineering,1798,2,Communications & Signals,2277,92,Moveable Bridge
+1757,2,Engineering,1798,2,Communications & Signals,2315,A0,Crossing Check No Defect Found
+1757,2,Engineering,1798,2,Communications & Signals,,J0,Employee Injury
+1757,2,Engineering,1801,3,Power,1869,0,To Be Determined
+1757,2,Engineering,1801,3,Power,1932,10,Catenary System
+1757,2,Engineering,1801,3,Power,,11,Catenary System - No Defect Found
+1757,2,Engineering,1801,3,Power,1934,20,Third Rail System
+1757,2,Engineering,1801,3,Power,1936,30,Substation
+1757,2,Engineering,1801,3,Power,,40,SCADA
+1757,2,Engineering,1801,3,Power,1944,50,Signal Power System
+1757,2,Engineering,1801,3,Power,1945,60,Local Utility
+1757,2,Engineering,1801,3,Power,,70,Human or Animal Interference
+1757,2,Engineering,1801,3,Power,2362,80,Track Circuit - Bond
+1757,2,Engineering,1801,3,Power,2278,92,Moveable Bridge
+1757,2,Engineering,1801,3,Power,,J0,Employee Injury
+1758,3,Transportation,1774,0,Unclassified,1870,0,To Be Determined
+1758,3,Transportation,1786,1,Crew Performance,1871,0,To Be Determined
+1758,3,Transportation,1786,1,Crew Performance,2197,1,Engineers
+1758,3,Transportation,1786,1,Crew Performance,2198,2,Conductors
+1758,3,Transportation,1786,1,Crew Performance,2265,3,Crew Reported Symptom - NDF
+1758,3,Transportation,1786,1,Crew Performance,2308,4,Gapped
+1758,3,Transportation,1786,1,Crew Performance,2377,5,ECT
+1758,3,Transportation,1795,2,Train Dispatching,1872,0,To Be Determined
+1758,3,Transportation,1805,3,Yard Operations,1873,0,To Be Determined
+1758,3,Transportation,1805,3,Yard Operations,2390,1,Yard master
+1758,3,Transportation,1805,3,Yard Operations,,2,switching crew
+1758,3,Transportation,1812,4,Crew Dispatching,1874,0,To Be Determined
+1758,3,Transportation,1812,4,Crew Dispatching,,1,Shortage of Crewmen
+1758,3,Transportation,2182,6,Train Routing,2183,0,To Be Determined
+1758,3,Transportation,2194,7,Train Error,2193,0,To Be Determined
+1758,3,Transportation,2293,C,Employee Illness,,0,To Be Determined
+1758,3,Transportation,2316,G,Gapped,2317,0,To Be Determined
+1758,3,Transportation,2284,H,Fleet Management,2285,0,To Be Determined
+1758,3,Transportation,2284,H,Fleet Management,2309,1,Fuel
+1758,3,Transportation,2284,H,Fleet Management,,2,Unscheduled Turn Of Equipment
+1758,3,Transportation,2202,J,Employee Injury,2203,0,To Be Determined
+1759,4,Other,1775,0,Unclassified,1877,0,To Be Determined
+1759,4,Other,1783,1,Derailment,1878,0,To Be Determined
+1759,4,Other,1800,2,Collision - Train Accident,1876,0,To Be Determined
+1759,4,Other,1802,3,Amtrak,1879,0,To Be Determined
+1759,4,Other,1822,5,Coast Guard/Movable Bridge Openings,1881,0,To Be Determined
+1759,4,Other,2153,A,Debris / Vandalism,2162,0,To Be Determined
+1759,4,Other,2154,B,Bridge Strike,2163,0,To Be Determined
+1759,4,Other,2185,D,Checked Equipment No Defect Found,2186,0,To Be Determined
+1759,4,Other,2187,E,Unfounded Non MNR Report,2188,0,To Be Determined
+1759,4,Other,2189,F,Crossing Check / No Defect Found,2190,0,To Be Determined
+1759,4,Other,2191,H,Human Obstruction,2192,0,To Be Determined
+1759,4,Other,2200,J,Employee Injury,2201,0,To Be Determined
+1759,4,Other,2313,K,Infrastructure Accident,2314,0,To Be Determined
+1759,4,Other,2368,W,Wild Detector,2370,ND,Inspected - No Defect Found
+1760,5,Police,1776,0,Unclassified,1884,0,To Be Determined
+1760,5,Police,1785,1,On Board Trains,2291,0,To Be Determined
+1760,5,Police,1785,1,On Board Trains,2340,1,Assault
+1760,5,Police,1785,1,On Board Trains,2339,2,Unruly Passenger
+1760,5,Police,1785,1,On Board Trains,1885,19,Public Safety Protocols
+1760,5,Police,1797,2,Grand Central Terminal,1886,0,To Be Determined
+1760,5,Police,1806,3,Outlying Stations,1887,0,To Be Determined
+1760,5,Police,1810,4,Right-of-Way,1888,0,To Be Determined
+1760,5,Police,1820,5,Grade Crossing,1889,0,To Be Determined
+1760,5,Police,1825,6,Non-Railroad Incident,1890,0,To Be Determined
+1760,5,Police,1832,7,Trespasser,1832,0,To Be Determined
+1760,5,Police,1835,8,Vandalism,1892,0,To Be Determined
+1760,5,Police,1839,9,Security,1893,0,To Be Determined
+1760,5,Police,2155,A,Object Left On Train,2164,0,To Be Determined
+1760,5,Police,2311,B,Fatality,2312,0,To Be Determined
+1760,5,Police,2337,C,Mask Compliance,2338,0,To Be Determined
+1760,5,Police,2287,F,Fare Dispute,2288,0,To Be Determined
+1760,5,Police,2208,J,Employee Injury,,0,To Be Determined
+1761,6,Capital,1777,0,Unclassified,1894,0,To Be Determined
+1761,6,Capital,1790,1,Grand Central Terminal,1895,0,To Be Determined
+1761,6,Capital,1799,2,"Shops, Yards, Facilities",1896,0,To Be Determined
+1761,6,Capital,1803,3,Stations,1897,0,To Be Determined
+1761,6,Capital,1811,4,Catenary/Power,1898,0,To Be Determined
+1761,6,Capital,1816,5,Signal,1899,0,To Be Determined
+1761,6,Capital,1826,6,Track and Right-of-Way,1900,0,To Be Determined
+1761,6,Capital,1829,7,Bridges,1901,0,To Be Determined
+1761,6,Capital,1841,9,Non-Railroad/I&C,1903,0,To Be Determined
+1761,6,Capital,2318,B,Contractor Injury,2319,0,To Be Determined
+1762,7,Environmental,1778,0,Unclassified,1904,0,To Be Determined
+1762,7,Environmental,1784,1,Winter Storm,1905,0,Storms To Be Named
+1762,7,Environmental,1791,2,Wind,1906,0,To Be Determined
+1762,7,Environmental,1804,3,Rain/Flooding,1907,0,Storms To Be Named
+1762,7,Environmental,1809,4,Extreme Heat,1908,1,Speed Restriction
+1762,7,Environmental,1819,5,Extreme Cold,1909,1,Speed Restriction
+1762,7,Environmental,1828,6,Speed Restriction (weather-related),1910,0,To Be Determined
+1762,7,Environmental,1831,7,Slip Slide,1911,0,To Be Determined
+1762,7,Environmental,2137,8,Hurricane,2138,1,Storms To Be Named
+1762,7,Environmental,2157,9,Environmental Obstruction / Wildlife,2170,0,To Be Determined
+1762,7,Environmental,2296,A,Tropical Storm,2297,1,Storms To Be Named
+1762,7,Environmental,2383,E,Lightning,2384,0,To Be Determined
+1762,7,Environmental,2353,L,Oil Leak/Spill,,0,To Be Determined
+1763,8,Customer-Related,1779,0,Unclassified,1912,0,To Be Determined
+1763,8,Customer-Related,1782,1,Illness,1913,0,To Be Determined
+1763,8,Customer-Related,1792,2,Injury,1914,0,To Be Determined
+1763,8,Customer-Related,1808,3,Heavy Ridership / Slow Loading,1915,0,To Be Determined
+1763,8,Customer-Related,1815,4,Change in Track / Platform,1916,0,To Be Determined
+1763,8,Customer-Related,1817,5,Group Move,1917,0,To Be Determined
+1763,8,Customer-Related,1823,6,Customer Service,1918,0,To Be Determined
+1763,8,Customer-Related,1833,7,Special Event Ridership,1919,0,To Be Determined
+1763,8,Customer-Related,1836,8,Fare Dispute,1920,0,To Be Determined
+1763,8,Customer-Related,2167,9,Refused Medical Attention,2168,0,To Be Determined
+1764,9,Hold,1780,0,Unclassified,1925,0,To Be Determined
+1764,9,Hold,1768,1,CP12,1921,0,To Be Determined
+1764,9,Hold,1769,2,CP75,1922,0,To Be Determined
+1764,9,Hold,1770,3,CP216,1923,0,To Be Determined
+1764,9,Hold,,4,CP274,,0,To Be Determined
+1764,9,Hold,2148,5,Out Of Slot,2149,0,To Be Determined
+2320,O,Other Agency,,0,Unclassified,,0,To Be Determined
+2320,O,Other Agency,2321,1,Derailment,2332,0,To Be Determined
+2320,O,Other Agency,2322,2,Grade Crossing Incidents,2335,0,To Be Determined
+2320,O,Other Agency,2323,3,Amtrak,2329,0,To Be Determined
+2320,O,Other Agency,2324,4,Freight Railroad,2334,0,To Be Determined
+2320,O,Other Agency,2325,5,Coast Guard/Movable Bridge Openings,2331,0,To Be Determined
+2320,O,Other Agency,2326,6,FRA/NTSB/PTSB/Other Agency,2336,0,To Be Determined
+2320,O,Other Agency,2327,7,Fire On/Near Tracks,2333,0,To Be Determined
+2320,O,Other Agency,2328,B,Bridge Strike,2330,0,To Be Determined
+2320,O,Other Agency,2344,C,Con Edison,2345,0,To Be Determined
+2320,O,Other Agency,2380,U,Local Power Utility Outage,2385,0,To Be Determined
+2320,O,Other Agency,2350,N,NYC Water,,0,To Be Determined
+1230,M,Meadowlands,1789,1,Late Arrival at CP216,,0,To Be Determined
+1230,M,Meadowlands,1793,2,Mechanical,,0,To Be Determined
+1229,S,Shore Line East,1787,1,Late Arrival at NH,,0,To Be Determined
+1229,S,Shore Line East,1794,2,Mechanical,,0,To Be Determined
+1228,A,Amtrak,,,,,,
