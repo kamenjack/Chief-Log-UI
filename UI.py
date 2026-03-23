@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import textwrap
 
-from dict import getDeptName, getSystemName, getSymptomName
+from dict import getDeptName, getSystemName, getSymptomName, getserviceName
 
 st.set_page_config(page_title="Train Delay Viewer", layout="wide")
 
@@ -18,6 +18,7 @@ input[disabled], textarea[disabled] {
 div[data-baseweb="input"] {
     background-color: white !important;
 }
+
 
 label {
     color: black !important;
@@ -82,6 +83,7 @@ label {
     color: #2f3340;
     white-space: nowrap;
 }
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -103,6 +105,7 @@ if uploaded_file is not None:
         "DEPT_CODE",
         "SYSTEM_CODE",
         "SYMPTOM_CODE"
+        "SERVICE_TYPE_CODE"
     ]
 
     if date_column not in df.columns:
@@ -182,9 +185,11 @@ if uploaded_file is not None:
     if selected_row is None:
         st.info("Click a train row in Daily Records.")
     else:
+        service_code=str(selected_row.get("SERVICE_TYPE_CODE","")).strip()
         dept_code = str(selected_row.get("DEPT_CODE", "")).strip()
         system_code = str(selected_row.get("SYSTEM_CODE", "")).strip()
         symptom_code = str(selected_row.get("SYMPTOM_CODE", "")).strip()
+        service_name=getserviceName(service_code)
         dept_name=getDeptName(dept_code)
         system_name=getSystemName(dept_code,system_code)
         symptom_name=getSymptomName(dept_code,system_code,symptom_code)
@@ -195,9 +200,16 @@ if uploaded_file is not None:
             return value
 
 
+
+
+
         html = textwrap.dedent(f"""
             <div class="delay-row">
                 <div class="delay-label">Delay Code:</div>
+                  <div class="delay-item">
+                    <div class="delay-box">{safe_display(service_code)}</div>
+                    <div class="delay-note">{service_name}</div>
+                </div>
                 <div class="delay-item">
                     <div class="delay-box">{safe_display(dept_code)}</div>
                     <div class="delay-note">{dept_name}</div>
@@ -214,9 +226,52 @@ if uploaded_file is not None:
         """).strip()
         st.markdown(html, unsafe_allow_html=True)
 
+        with st.form("delay_form"):
+            col1, col2, col3, col4 = st.columns(4)
+            with col1:
+                value1 = st.text_input("SERVICE_TYPE_CODE", key="SERVICE_TYPE_CODE", label_visibility="collapsed")
+            with col2:
+                value2 = st.text_input("DEPT_CODE", key="DEPT_CODE", label_visibility="collapsed")
+            with col3:
+                value3 = st.text_input("SYSTEM_CODE", key="SYSTEM_CODE", label_visibility="collapsed")
+            with col4:
+                value4 = st.text_input("SYMPTOM_CODE", key="SYMPTOM_CODE",
+                                       label_visibility="collapsed")
+            submitted = st.form_submit_button("Submit")
+
+        value1_name = getserviceName(value1)
+        value2_name = getDeptName(value2)
+        value3_name = getSystemName(value2, value3)
+        value4_name = getSymptomName(value2, value3, value4)
+
+        html = textwrap.dedent(f"""
+            <div class="delay-row">
+                <div class="delay-label">Delay Code Updated:</div>
+                  <div class="delay-item">
+                    <div class="delay-box">{safe_display(value1)}</div>
+                    <div class="delay-note">{value1_name}</div>
+                </div>
+                <div class="delay-item">
+                    <div class="delay-box">{safe_display(value2)}</div>
+                    <div class="delay-note">{value2_name}</div>
+                </div>
+                <div class="delay-item">
+                    <div class="delay-box">{safe_display(value3)}</div>
+                    <div class="delay-note">{value3_name}</div>
+                </div>
+                <div class="delay-item">
+                    <div class="delay-box delay-box-wide">{safe_display(value4)}</div>
+                    <div class="delay-note">{value4_name}</div>
+                </div>
+            </div>
+        """).strip()
+        st.markdown(html, unsafe_allow_html=True)
+
+
         # Skip these fields in the normal detail list
         skip_fields = set(code_columns)
-        skip_fields.update(["DEPT_NAME", "SYSTEM_NAME", "SYMPTOM_NAME","DelayCode"])
+        skip_fields.update(["DEPT_NAME", "SYSTEM_NAME", "SYMPTOM_NAME","DelayCode", "SERVICE_TYPE_NAME",
+                            "SERVICE_TYPE_CODE","SERVICE_TYPE","SYMPTOM_CODE"])
         LogidCommentMap = (
             chiefLogDailyDf.groupby("DisplayLogId")["Comments"]
             .apply(

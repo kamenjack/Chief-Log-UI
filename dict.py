@@ -53,6 +53,8 @@ for (deptCode, systemCode), group in symptomRows.groupby(
         if symptomCode != "":
             currentSymptomDict[symptomCode] = symptomName
     symptomCodeDict[(deptCode, systemCode)] = currentSymptomDict
+serviceCodeDict={"1":"Primary MNR","2":"Secondary MNR","A":"Amtark","S":"Shoreline East"
+    ,"M":"Meadowlands", "W":"West of Hudson"}
 
 def getDeptName(deptCode):
     deptCode = str(deptCode).strip()
@@ -70,3 +72,7 @@ def getSymptomName(deptCode, systemCode, symptomCode):
     systemCode = str(systemCode).strip()
     symptomCode = str(symptomCode).strip()
     return symptomCodeDict.get((deptCode, systemCode), {}).get(symptomCode, "N/A")
+
+def getserviceName(serviceCode):
+    serviceCode = str(serviceCode).strip()
+    return serviceCodeDict.get(serviceCode, "N/A")
