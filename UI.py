@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import textwrap
-
 from dict import getDeptName, getSystemName, getSymptomName, getserviceName
 
 st.set_page_config(page_title="Train Delay Viewer", layout="wide")
@@ -94,6 +93,12 @@ chief_log_file="ChiefLog 2023-01-01 to 2023-12-31.csv"
 chiefLogDataFrame = pd.read_csv(chief_log_file)
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
+    if "row_id" not in df.columns:
+        df.insert(0, "row_id", range(1, len(df) + 1))
+    if "edited_df" not in st.session_state:
+        st.session_state.edited_df = df.copy()
+
+    newdf = st.session_state.edited_df
 
     date_column = "RUN_DATE"
     train_column = "TRAIN_NAME"
@@ -193,16 +198,12 @@ if uploaded_file is not None:
         dept_name=getDeptName(dept_code)
         system_name=getSystemName(dept_code,system_code)
         symptom_name=getSymptomName(dept_code,system_code,symptom_code)
+        selected_rowid=selected_row["row_id"]
 
         def safe_display(value):
             if value == "nan":
                 return ""
             return value
-
-
-
-
-
         html = textwrap.dedent(f"""
             <div class="delay-row">
                 <div class="delay-label">Delay Code:</div>
@@ -266,8 +267,6 @@ if uploaded_file is not None:
             </div>
         """).strip()
         st.markdown(html, unsafe_allow_html=True)
-
-
         # Skip these fields in the normal detail list
         skip_fields = set(code_columns)
         skip_fields.update(["DEPT_NAME", "SYSTEM_NAME", "SYMPTOM_NAME","DelayCode", "SERVICE_TYPE_NAME",
@@ -318,6 +317,7 @@ if uploaded_file is not None:
                 )
 
             if field == "COMMENTS":
+
                 st.markdown("**ChiefLog Comment**")
                 st.text_area(
                     label="",
@@ -327,4 +327,46 @@ if uploaded_file is not None:
                     label_visibility="collapsed",
                     key=f"area_comment2_{row_position}_{index}"
                 )
+                with st.form("comment_form"):
+                    st.markdown("**Edit Comment**")
+                    newComment = st.text_area("newComment", key="newComment", label_visibility="collapsed")
+                    commentSubmitted = st.form_submit_button("Submit")
+                    if commentSubmitted:
+                        st.session_state.edited_df.loc[
+                            st.session_state.edited_df["row_id"] == selected_rowid, "COMMENTS"
+                        ] = newComment
+                        #csvData = newdf.to_csv(index=False)
+                        csv=newdf.to_csv("csv",index=False)
+            if field == "DISPLAY_LOG_ID":
+                with st.form("logid_form"):
+                    st.markdown("**Edit Display_Log_Id**")
+                    newlogid = st.text_area("newlogid", key="newlogid", label_visibility="collapsed")
+                    logidsubmited = st.form_submit_button("Submit")
+                    if logidsubmited:
+                        st.session_state.edited_df.loc[
+                            st.session_state.edited_df["row_id"] == selected_rowid, "DISPLAY_LOG_ID"
+                        ] = newlogid
+                        #csvData = newdf.to_csv(index=False)
+                        csv=newdf.to_csv("csv",index=False)
+        if commentSubmitted:
+            finaldf=pd.read_csv("csv")
+            finaldf=finaldf.drop(columns=["row_id"])
+            csvData = finaldf.to_csv(index=False)
+            st.download_button(
+                "Download CSV",
+                data=csvData,
+                file_name="output.csv",
+                mime="text/csv"
+                )
+        if logidsubmited:
+            finaldf=pd.read_csv("csv")
+            finaldf=finaldf.drop(columns=["row_id"])
+            csvData = finaldf.to_csv(index=False)
+            st.download_button(
+                "Download CSV",
+                data=csvData,
+                file_name="output.csv",
+                mime="text/csv"
+                )
+
 
