@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
 import textwrap
+
+from streamlit import markdown
+
 from dict import getDeptName, getSystemName, getSymptomName, getserviceName
 
 st.set_page_config(page_title="Train Delay Viewer", layout="wide")
@@ -22,6 +25,20 @@ div[data-baseweb="input"] {
 label {
     color: black !important;
     font-weight: 600;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+}
+
+.title-icon {
+    font-size: 1.8rem;
+    line-height: 1;
 }
 
 /* Delay code row */
@@ -159,6 +176,9 @@ if uploaded_file is not None:
         if col in daily_df.columns
     ]
     log_id_columns=[col for col in["DisplayLogId","Comments"] if col in chiefLogDailyDf.columns]
+    st.set_page_config(layout="wide")
+
+
 
     st.markdown("### LTS Lateness")
 
@@ -185,8 +205,15 @@ if uploaded_file is not None:
             selected_row = None
     else:
         selected_row = None
-
-    st.markdown("### Train Details")
+    st.markdown(
+        """
+        <div class="section-title">
+            <span class="title-icon">🤖</span>
+            <span>AI Train Details</span>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
     if selected_row is None:
         st.info("Click a train row in Daily Records.")
@@ -200,7 +227,7 @@ if uploaded_file is not None:
         system_name=getSystemName(dept_code,system_code)
         symptom_name=getSymptomName(dept_code,system_code,symptom_code)
         selected_rowid=selected_row["row_id"]
-        colleft, colmiddle, colright = st.columns(3)
+        colleft, colmiddle = st.columns(2)
         with colleft:
             def safe_display(value):
                 if value == "nan":
@@ -208,7 +235,7 @@ if uploaded_file is not None:
                 return value
             html = textwrap.dedent(f"""
                 <div class="delay-row">
-                    <div class="delay-label">Delay Code:</div>
+                    <div class="delay-label">🤖 AI Delay Code:</div>
                       <div class="delay-item">
                         <div class="delay-box">{safe_display(service_code)}</div>
                         <div class="delay-note">{service_name}</div>
@@ -241,34 +268,40 @@ if uploaded_file is not None:
                     value4 = st.text_input("SYMPTOM_CODE", key="SYMPTOM_CODE",
                                            label_visibility="collapsed")
                 submitted = st.form_submit_button("Submit")
+                value1_name = getserviceName(value1)
+                value2_name = getDeptName(value2)
+                value3_name = getSystemName(value2, value3)
+                value4_name = getSymptomName(value2, value3, value4)
+                if submitted:
+                    st.session_state.edited_df.loc[
+                        st.session_state.edited_df["row_id"] == selected_rowid,
+                        ["SERVICE_TYPE_CODE", "DEPT_CODE", "SYSTEM_CODE", "SYMPTOM_CODE","SERVICE_TYPE_NAME","DEPT_NAME","SYSTEM_NAME","SYMPTOM_NAME"]
+                    ] = [value1, value2, value3, value4,value1_name, value2_name, value3_name, value4_name]
 
-            value1_name = getserviceName(value1)
-            value2_name = getDeptName(value2)
-            value3_name = getSystemName(value2, value3)
-            value4_name = getSymptomName(value2, value3, value4)
-        with colright:
-            html = textwrap.dedent(f"""
-                <div class="delay-row">
-                    <div class="delay-label">Delay Code Updated:</div>
-                      <div class="delay-item">
-                        <div class="delay-box">{safe_display(value1)}</div>
-                        <div class="delay-note">{value1_name}</div>
-                    </div>
-                    <div class="delay-item">
-                        <div class="delay-box">{safe_display(value2)}</div>
-                        <div class="delay-note">{value2_name}</div>
-                    </div>
-                    <div class="delay-item">
-                        <div class="delay-box">{safe_display(value3)}</div>
-                        <div class="delay-note">{value3_name}</div>
-                    </div>
-                    <div class="delay-item">
-                        <div class="delay-box delay-box-wide">{safe_display(value4)}</div>
-                        <div class="delay-note">{value4_name}</div>
-                    </div>
-                </div>
-            """).strip()
-            st.markdown(html, unsafe_allow_html=True)
+
+        # with colright:
+        #     html = textwrap.dedent(f"""
+        #         <div class="delay-row">
+        #             <div class="delay-label">Delay Code Updated:</div>
+        #               <div class="delay-item">
+        #                 <div class="delay-box">{safe_display(value1)}</div>
+        #                 <div class="delay-note">{value1_name}</div>
+        #             </div>
+        #             <div class="delay-item">
+        #                 <div class="delay-box">{safe_display(value2)}</div>
+        #                 <div class="delay-note">{value2_name}</div>
+        #             </div>
+        #             <div class="delay-item">
+        #                 <div class="delay-box">{safe_display(value3)}</div>
+        #                 <div class="delay-note">{value3_name}</div>
+        #             </div>
+        #             <div class="delay-item">
+        #                 <div class="delay-box delay-box-wide">{safe_display(value4)}</div>
+        #                 <div class="delay-note">{value4_name}</div>
+        #             </div>
+        #         </div>
+        #     """).strip()
+        #     st.markdown(html, unsafe_allow_html=True)
         # Skip these fields in the normal detail list
         skip_fields = set(code_columns)
         skip_fields.update(["DEPT_NAME", "SYSTEM_NAME", "SYMPTOM_NAME","DelayCode", "SERVICE_TYPE_NAME",
@@ -288,29 +321,67 @@ if uploaded_file is not None:
         )
         selected_id = str(selected_row["DISPLAY_LOG_ID"]).strip()
         matched_file2_comment = LogidCommentMap.get(selected_id, "")
-        read_only_df=df[df["row_id"]==(selected_row["row_id"])]
-        st.dataframe(read_only_df[["TRAIN_NAME", "RUN_DATE","LOCATION", "LATENESS","SERVICE_TYPE_ID"
-         ,"AnswerMinutes","BRANCH", "CANCELLED","TERMINATED", "Delay_Category"]],
-                     hide_index=True)
+        detail_columns = [
+            "TRAIN_NAME",
+            "RUN_DATE",
+            "LOCATION",
+            "LATENESS",
+            "SERVICE_TYPE_ID",
+            "AnswerMinutes",
+            "BRANCH",
+            "CANCELLED",
+            "TERMINATED",
+            "Delay_Category",
+        ]
 
-        col1, col2 = st.columns(2)
+
+        editable_row_df = st.session_state.edited_df.loc[
+            st.session_state.edited_df["row_id"] == selected_rowid,
+            detail_columns
+        ].copy()
+
+        edited_row_df = st.data_editor(
+            editable_row_df,
+            hide_index=True,
+            use_container_width=True,
+            key=f"editable_detail_{selected_rowid}",
+        )
+
+
+        st.session_state.edited_df.loc[
+            st.session_state.edited_df["row_id"] == selected_rowid,
+            detail_columns
+        ] = edited_row_df.iloc[0].values
+        st.dataframe(
+            merged_comment_df,
+            use_container_width=True,
+            hide_index=True
+        )
+
+        col1, col2,col3 = st.columns(3)
         with col1:
-            st.markdown("**DISPLAY_LOG_ID**")
+            st.markdown("**🤖 AI DISPLAY_LOG_ID**")
             st.write(selected_row["DISPLAY_LOG_ID"])
         with col2:
             with st.form("logid_form"):
                 st.markdown("**Edit Display_Log_Id**")
-                newlogid = st.text_input("newlogid", key="newlogid", label_visibility="collapsed")
+                col1, col2 = st.columns([1, 3])
+                with col1:
+                    st.write(selected_row["DISPLAY_LOG_ID"][0:10])
+                with col2:
+                    newlogid = st.text_input("newlogid", key="newlogid", label_visibility="collapsed")
                 logidsubmited = st.form_submit_button("Submit")
                 if logidsubmited:
                     st.session_state.edited_df.loc[
                         st.session_state.edited_df["row_id"] == selected_rowid, "DISPLAY_LOG_ID"
-                    ] = newlogid
+                    ] = selected_row["DISPLAY_LOG_ID"][0:10]+newlogid
                     # csvData = newdf.to_csv(index=False)
                     csv = newdf.to_csv("csv", index=False)
+        with col3:
+            st.markdown('')
         col1,col2,col3=st.columns(3)
         with col1:
-            st.markdown("**COMMENTS**")
+            st.markdown("**🤖 AI COMMENTS**")
             st.write(selected_row["COMMENTS"])
         with col2:
             st.markdown("**ChiefLog Comment**")
@@ -335,30 +406,34 @@ if uploaded_file is not None:
                     csv = newdf.to_csv("csv", index=False)
 
 
-        if commentSubmitted:
-            finaldf=pd.read_csv("csv")
-            finaldf=finaldf.drop(columns=["row_id"])
-            csvData = finaldf.to_csv(index=False)
-            st.download_button(
-                "Download CSV",
-                data=csvData,
-                file_name="output.csv",
-                mime="text/csv"
-                )
-        if logidsubmited:
-            finaldf=pd.read_csv("csv")
-            finaldf=finaldf.drop(columns=["row_id"])
-            csvData = finaldf.to_csv(index=False)
-            st.download_button(
-                "Download CSV",
-                data=csvData,
-                file_name="output.csv",
-                mime="text/csv"
-                )
-    st.dataframe(
-        merged_comment_df,
-        use_container_width=True,
-        hide_index=True
+        # if commentSubmitted:
+        #     finaldf=pd.read_csv("csv")
+        #     finaldf=finaldf.drop(columns=["row_id"])
+        #     csvData = finaldf.to_csv(index=False)
+        #     st.download_button(
+        #         "Download CSV",
+        #         data=csvData,
+        #         file_name="output.csv",
+        #         mime="text/csv"
+        #         )
+        # if logidsubmited:
+        #     finaldf=pd.read_csv("csv")
+        #     finaldf=finaldf.drop(columns=["row_id"])
+        #     csvData = finaldf.to_csv(index=False)
+        #     st.download_button(
+        #         "Download CSV",
+        #         data=csvData,
+        #         file_name="output.csv",
+        #         mime="text/csv"
+        #         )
+    final_df = st.session_state.edited_df.drop(columns=["row_id"], errors="ignore")
+    csv_data = final_df.to_csv(index=False)
+
+    st.download_button(
+        "Download CSV",
+        data=csv_data,
+        file_name="output.csv",
+        mime="text/csv"
     )
 
 
